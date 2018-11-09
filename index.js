@@ -12,6 +12,7 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
 const authRouter = require('./routes/auth');
+const blogsRouter = require('./routes/blog');
 
 const app = express();
 
@@ -35,6 +36,7 @@ passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 app.use('/api/auth', authRouter);
+app.use('/api/blog', blogsRouter);
 
 // 404 Handler
 app.use((req, res, next) => {

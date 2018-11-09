@@ -10,9 +10,7 @@ const jwtStrategy = require('./passport/jwt');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
 
-const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
 const app = express();
@@ -36,8 +34,24 @@ app.use(express.json());
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-app.use('/api/blog', (req, res, next) => {
-    console.log('Working!');
+app.use('/api/auth', authRouter);
+
+// 404 Handler
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// Custom Error Handler
+app.use((err, req, res, next) => {
+    if (err.status) {
+        const errBody = Object.assign({}, err, { message: err.message });
+        res.status(err.status).json(errBody);
+    } else {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 });
 
 function runServer(port = PORT) {

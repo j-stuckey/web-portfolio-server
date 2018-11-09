@@ -4,9 +4,16 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
+const passport = require('passport');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
+
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
+
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -24,6 +31,10 @@ app.use(
 
 // parses the request body
 app.use(express.json());
+
+// Configures passport to use the strategies
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 app.use('/api/blog', (req, res, next) => {
     console.log('Working!');

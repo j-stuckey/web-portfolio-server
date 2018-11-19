@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    content: { type: String, required: true }
+    content: { type: String, required: true },
+    posted: { type: String, required: true }
 });
 
 blogSchema.set('timestamps', true);
